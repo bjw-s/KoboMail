@@ -40,7 +40,7 @@ const binCP = "/bin/cp"
 const binRM = "/bin/rm"
 const binQndb = "/usr/bin/qndb"
 
-//config struct
+// config struct
 type KoboMailConfig struct {
 	IMAP_Config       imap_config
 	Execution_Type    execution_type
@@ -74,7 +74,7 @@ func nickelUSBplugAddRemove(action string) {
 	nickelPipe.Close()
 }
 
-//let's check if the NickelDbus version is correct
+// let's check if the NickelDbus version is correct
 func checkNickelDbusVersion() (ok bool) {
 	arg1 := "-m"
 	arg2 := "ndbVersion"
