@@ -14,7 +14,7 @@ if [ -f "$UNINSTALL" ]; then
     logger -t "KoboMail" -p daemon.warning "Launcher: KoboMail UNINSTALL file located, removing KoboMail..."
     ./usr/local/kobomail/uninstall.sh
     logger -t "KoboMail" -p daemon.warning "Launcher: KoboMail removed"
-else 
+else
     echo "Running KoboMail..."
     logger -t "KoboMail" -p daemon.warning "Launcher: KoboMail binary execution started"
     /usr/local/kobomail/kobomail

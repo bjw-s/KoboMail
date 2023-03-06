@@ -1,4 +1,4 @@
-# If you want to uninstall KoboMail just place an empty file called UNINSTALL next to this configuration file 
+# If you want to uninstall KoboMail just place an empty file called UNINSTALL next to this configuration file
 # and next time KoboMail runs it will delete itself
 
 [imap_config]
@@ -20,13 +20,13 @@
     #email_flag_type = "plus"
     #email_flag = "kobo"
 
-    #  - subject:   where KoboMail will search for emails with a subject like [flag] or $flag$ . 
+    #  - subject:   where KoboMail will search for emails with a subject like [flag] or $flag$ .
     #               We recommend using something unique so there's no false positives, for example
     #               if you just put Kobo you might be allowing KoboMail to detect regular emails from Rakuten Kobo
     email_flag_type = "subject"
     email_flag = "[MyKobo]"
 
-    # flag to process all emails sent to kobo device or only the unread emails 
+    # flag to process all emails sent to kobo device or only the unread emails
     email_unseen = "true"
 
 [execution_type]
@@ -34,7 +34,7 @@
     #  - auto:   via a trigger attached to the wifi connection, where whenever your kobo device is connected to a wifi connection KoboMail is run
     type = "auto"
     #  - manual: via NickelMenu where your Kobo device receives an adicional menu where you can mannually trigger the KoboMail execution
-    #             for this method to work you should first install NickelMenu, head over to https://pgaskin.net/NickelMenu/ to review this component 
+    #             for this method to work you should first install NickelMenu, head over to https://pgaskin.net/NickelMenu/ to review this component
     #type = "manual"
 
 [processing_config]
