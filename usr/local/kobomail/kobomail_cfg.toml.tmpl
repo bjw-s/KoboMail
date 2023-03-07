@@ -15,6 +15,9 @@
     # other email services please review their configuration options
     imap_pwd = "password"
 
+    # IMAP folder to process
+    imap_folder = "INBOX"
+
     # there's two methods KoboMail can identify emails destined to be imported into you're Kobo device:
     #  - plus:      where the email server allows sending emails to user+flag@server.com (like gmail)
     #email_flag_type = "plus"
@@ -28,6 +31,10 @@
 
     # flag to process all emails sent to kobo device or only the unread emails
     email_unseen = "true"
+
+    # delete all emails processed by KoboMail
+    # be very careful when enabling this, as it can result in dataloss!
+    email_delete = "false"
 
 [execution_type]
     # there's two methods to trigger the KoboMail execution:

@@ -34,3 +34,8 @@ repos:
     hooks:
       - id: go-fmt
       - id: go-vet
+
+  - repo: https://github.com/tekwizely/pre-commit-golang
+    rev: v1.0.0-rc.1
+    hooks:
+    -   id: go-revive

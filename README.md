@@ -11,10 +11,15 @@ This software is experimental, if you don't want to risk corrupting your files, 
 Use this software AT YOUR OWN RISK.
 
 ## Changelog
+**0.4.0**
+* added the ability to configure the IMAP folder that is monitored
+* added the ability to automatically remove any emails that are processed
+* modernized the CI toolset
+
 **0.3.0**
 * added hability to configure email search criteria by subject tag
 * added hability to limit which filetypes we get from the emails found
-* users can choose to run KoboMail automatically via UDEV rules (whenever Kobo device gets wifi) or manually via NickelMenu
+* users can choose to run KoboMail automatically via Udev rules (whenever Kobo device gets wifi) or manually via NickelMenu
 * NickelDbus usage now requires new version 0.2.0 for dialog (if not present only logs will be written)
 
 **0.2.0**
@@ -68,6 +73,9 @@ No you should head to the .adds/kobomail folder and edit the kobomail_cfg.toml f
     # other email services please review their configuration options
     imap_pwd = "password"
 
+    # IMAP folder to process
+    imap_folder = "INBOX"
+
     # there's two methods KoboMail can identify emails destined to be imported into you're Kobo device:
     #  - plus:      where the email server allows sending emails to user+flag@server.com (like gmail)
     #email_flag_type = "plus"
@@ -108,7 +116,7 @@ The search criteria can be defined in the configuration file and there's two met
 
 There's also two different methods to start KoboMail:
 - manual: if you have NickelMenu installed there will be a new option to start KoboMail manually
-- auto: via a automatic mechanism (UDEV rules) which will trigger KoboMail everytime Wifi is activated
+- auto: via a automatic mechanism (Udev rules) which will trigger KoboMail everytime Wifi is activated
 
 The prefered method is "manual" as probably you don't want to start KoboMail everytime you sync data.
 
