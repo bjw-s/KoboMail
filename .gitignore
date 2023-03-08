@@ -1,9 +1,10 @@
-# GoReleaser dist folder #
-##########################
+# Release dist folder
 dist/
 
-# OS generated files #
-######################
+# Potential debugging artifacts
+kobomail.log
+
+# OS generated files
 .DS_Store
 .DS_Store?
 ._*

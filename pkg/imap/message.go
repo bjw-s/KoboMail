@@ -9,18 +9,19 @@ import (
 	"strings"
 	"time"
 
+	"github.com/clisboa/kobomail/pkg/logger"
 	"github.com/emersion/go-imap"
 	"github.com/emersion/go-message/mail"
+	"go.uber.org/zap"
 )
 
 type message struct {
 	imapMessage   *imap.Message
 	messageReader *mail.Reader
 
-	Date        time.Time
-	Sender      string
-	Subject     string
-	attachments []string
+	Date    time.Time
+	Sender  string
+	Subject string
 }
 
 func (msg *message) getMessageReader() (*mail.Reader, error) {
@@ -58,13 +59,13 @@ func (msg *message) FetchDetails() error {
 	return nil
 }
 
-func (msg *message) ProcessAttachments(allowedExtensions []string, destinationPath string) ([]string, error) {
+func (msg *message) ProcessAttachments(allowedExtensions []string, destinationPath string) (int, error) {
 	msgReader, err := msg.getMessageReader()
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 
-	var attachments []string
+	downloadedAttachmentCount := 0
 
 	// Process each message part, there might be multiple attachments
 	for {
@@ -72,7 +73,7 @@ func (msg *message) ProcessAttachments(allowedExtensions []string, destinationPa
 		if err == io.EOF {
 			break
 		} else if err != nil {
-			return nil, err
+			return 0, err
 		}
 
 		switch h := p.Header.(type) {
@@ -83,24 +84,26 @@ func (msg *message) ProcessAttachments(allowedExtensions []string, destinationPa
 
 			// Only save the attachment if the filetype is allowed
 			if containsFiletype(allowedExtensions, attachmentFileExtension) {
-				attachments = append(attachments, attachmentFileName)
-
 				// Check if the file is a kepub, rename it to .kepub.epub so kobo can properly handle it
 				if attachmentFileExtension == "kepub" {
 					attachmentFileName += ".epub"
 				}
 
+				logger.Debug("Downloading attachment", zap.String("filename", attachmentFileName))
+
 				attachmentContent, _ := io.ReadAll(p.Body)
 				// Write the whole body at once
-				err = os.WriteFile(destinationPath+attachmentFileName, attachmentContent, 0644)
+				err = os.WriteFile(destinationPath+"/"+attachmentFileName, attachmentContent, 0644)
 				if err != nil {
-					return nil, err
+					return 0, err
 				}
+				logger.Info("Succesfully downloaded attachment", zap.String("filename", attachmentFileName))
+				downloadedAttachmentCount++
 			}
 		}
 	}
 
-	return attachments, nil
+	return downloadedAttachmentCount, nil
 }
 
 func containsFiletype(slice []string, item string) bool {

@@ -10,25 +10,19 @@ import (
 
 	"github.com/clisboa/kobomail/pkg/config"
 	"github.com/clisboa/kobomail/pkg/imap"
-	"github.com/clisboa/kobomail/pkg/logging"
+	"github.com/clisboa/kobomail/pkg/logger"
 	"github.com/clisboa/kobomail/pkg/nickeldbus"
 	"github.com/clisboa/kobomail/pkg/nickelmenu"
 	"github.com/clisboa/kobomail/pkg/udev"
 	"go.uber.org/zap"
 )
 
-const defaultPath = "/mnt/onboard/.adds/kobomail/"
-const defaultLogFile = "kobomail.log"
-const defaultLibraryPath = "/mnt/onboard/KoboMailLibrary/"
-const defaultnickelHWstatusPipe = "/tmp/nickel-hardware-status"
-
-var koboMailConfig = config.New(defaultPath + "kobomail_cfg.toml")
-var logger = logging.New(defaultPath + defaultLogFile)
+var koboMailConfig = config.New(config.DefaultPath + "/kobomail_cfg.toml")
 
 // nickelUSBplugAddRemove simulates pugging in a USB cable
 // we'll use this in case NickelDbus is not installed
 func nickelUSBplugAddRemove(action string) {
-	nickelPipe, _ := os.OpenFile(defaultnickelHWstatusPipe, os.O_RDWR, os.ModeNamedPipe)
+	nickelPipe, _ := os.OpenFile(config.DefaultnickelHWstatusPipe, os.O_RDWR, os.ModeNamedPipe)
 	nickelPipe.WriteString("usb plug " + action)
 	nickelPipe.Close()
 }
@@ -205,18 +199,14 @@ func main() {
 		}
 		logger.Info("Processing message", zap.Any("message", msg))
 
-		downloadedAttachments, err := msg.ProcessAttachments(koboMailConfig.ProcessingConfig.Filetypes, defaultLibraryPath)
+		downloadedAttachmentsCount, err := msg.ProcessAttachments(koboMailConfig.ProcessingConfig.Filetypes, config.DefaultLibraryPath)
 		if err != nil {
 			nickeldbus.DialogAddOKButton()
 			nickeldbus.DialogUpdate("Exiting, failed to process attachment: " + err.Error())
 			logger.Fatal("Failed to process attachment", zap.Error(err))
 		}
 
-		for _, attachment := range downloadedAttachments {
-			logger.Info("Downloaded attachment", zap.String("filename", attachment))
-		}
-
-		numberOfEbooksProcessed = numberOfEbooksProcessed + len(downloadedAttachments)
+		numberOfEbooksProcessed = numberOfEbooksProcessed + downloadedAttachmentsCount
 
 		if koboMailConfig.IMAPConfig.EmailDelete == "true" {
 			err := imapConnection.DeleteMessage(msg)

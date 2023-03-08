@@ -14,6 +14,14 @@ import (
 	"github.com/knadh/koanf/v2"
 )
 
+// Set default paths
+const (
+	DefaultPath = "/mnt/onboard/.adds/kobomail"
+	// DefaultPath               = "/tmp/kobomail"
+	DefaultLibraryPath        = "/mnt/onboard/KoboMailLibrary"
+	DefaultnickelHWstatusPipe = "/tmp/nickel-hardware-status"
+)
+
 type sensitiveString string
 
 func (s sensitiveString) String() string {
@@ -74,6 +82,7 @@ func New(configFile string) *KoboMailConfig {
 	var koboMailConfig KoboMailConfig
 	var k = koanf.New(".")
 
+	// Load configuration from config file
 	if err := k.Load(file.Provider(configFile), toml.Parser()); err != nil {
 		log.Fatalf("Failed to load configuration: %v\n", err)
 	}
