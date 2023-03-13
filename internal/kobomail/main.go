@@ -129,7 +129,7 @@ func PreparePrerequisites() error {
 }
 
 func showDialog(message string, confirmationButton bool) {
-	if useNickelDbus {
+	if useNickelDbus && KoboMailConfig.ApplicationConfig.ShowNotifications {
 		logger.Debug("Showing dialog", zap.String("message", message), zap.Bool("confirmation_button", confirmationButton))
 		nickeldbus.DialogCreate(message)
 		if confirmationButton {
