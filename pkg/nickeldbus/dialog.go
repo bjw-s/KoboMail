@@ -4,9 +4,6 @@ package nickeldbus
 // DialogCreate creates a dialog to show a notification to the user
 func DialogCreate(initialMsg string) {
 	ndbObj, _ := getNdbObject(nil)
-	// ndbObj.Call(ndbInterface+".mwcToast", 0, 3000, "KoboMail", "Updating")
-	// ndbObj.Call(ndbInterface+".mwcToast", 0, 3000, "KoboMail", "Got emails")
-
 	ndbObj.Call(ndbInterface+".dlgConfirmCreate", 0)
 	ndbObj.Call(ndbInterface+".dlgConfirmSetTitle", 0, "KoboMail")
 	ndbObj.Call(ndbInterface+".dlgConfirmSetBody", 0, initialMsg)
