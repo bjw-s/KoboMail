@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/clisboa/kobomail/pkg/logger"
+	"github.com/bjw-s/kobomail/pkg/logger"
 	"github.com/emersion/go-imap"
 	"github.com/emersion/go-message/mail"
 	"go.uber.org/zap"

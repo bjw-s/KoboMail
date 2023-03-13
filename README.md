@@ -12,8 +12,13 @@ Use this software AT YOUR OWN RISK.
 
 ## Changelog
 **0.4.0**
+* restructure configuration and use proper datatypes (breaking change)
+* use native NickelDbus integration
+* integrate NickelSeries integration
+* added the ability to configure the destination folder where the attachments are downloaded
 * added the ability to configure the IMAP folder that is monitored
 * added the ability to automatically remove any emails that are processed
+* major codebase refactoring
 * modernized the CI toolset
 
 **0.3.0**
@@ -33,11 +38,7 @@ Use this software AT YOUR OWN RISK.
 
 
 ## TODO
-* refactoring NickelDbus to use DBUs libray instead of the qndb binary
 * add kepubify (already verified the arm binary can perfectly do the conversion on device)
-* find latest versions of NickelDbus and NickelMenu and propose to update that for the user
-* ~~looking into using NickelDbus to replace udev rules (triggering the program execution)~~
-* REMOVED - NickelDBus is a better alternative ~~* adding fbink progress bar when we start execution? (probably to much hassle for little return in functionality)~~
 * ~~add other emails accounts types~~
 
 ## Installing
@@ -45,7 +46,7 @@ Use this software AT YOUR OWN RISK.
 Quick start for Kobo devices:
 1. (OPTIONAL) download and install NickelDbus for increased functionality [KoboRoot.tgz](https://github.com/shermp/NickelDBus/releases/download/0.2.0/KoboRoot.tgz)
 2. (OPTIONAL) download and install NickelMenu for increased functionality [KoboRoot.tgz](https://github.com/pgaskin/NickelMenu/releases/download/v0.5.2/KoboRoot.tgz)
-3. download the latest [KoboRoot.tgz](https://github.com/clisboa/KoboMail/releases/download/v0.3/KoboRoot.tgz)
+3. download the latest [KoboRoot.tgz](https://github.com/bjw-s/KoboMail/releases/download/latest/KoboRoot.tgz)
 4. connect your Kobo device to your computer with a USB cable
 5. place the KoboRoot.tgz file in the .kobo directory of your Kobo device
 6. disconnect the reader
@@ -62,7 +63,7 @@ No you should head to the .adds/kobomail folder and edit the kobomail_cfg.toml f
 [imap_config]
     # you need to activate IMAP for your gmail account
     imap_host = "imap.gmail.com"
-    imap_port = "993"
+    imap_port = 993
 
     # email account
     imap_user = "user@gmail.com"
@@ -88,24 +89,38 @@ No you should head to the .adds/kobomail folder and edit the kobomail_cfg.toml f
     email_flag = "[MyKobo]"
 
     # flag to process all emails sent to kobo device or only the unread emails
-    email_unseen = "true"
-
-[execution_type]
-    # there's two methods to trigger the KoboMail execution:
-    #  - auto:   via a trigger attached to the wifi connection, where whenever your kobo device is connected to a wifi connection KoboMail is run
-    type = "auto"
-    #  - manual: via NickelMenu where your Kobo device receives an adicional menu where you can mannually trigger the KoboMail execution
-    #             for this method to work you should first install NickelMenu, head over to https://pgaskin.net/NickelMenu/ to review this component
-    #type = "manual"
+    email_unseen = true
 
 [processing_config]
+    # delete all emails processed by KoboMail
+    # be very careful when enabling this, as it can result in data loss!
+    email_delete = false
+
     #list the files KoboMail should get from the emails:
     #filetypes = ["epub", "kepub", "mobi", "pdf", "cbz", "cbr", "txt", "rtf"]
     filetypes = ["epub", "kepub"]
 
+    # perform a full rescan of the Kobo Library
+    # defaults to an abbreviated scan
+    full_rescan = false
+
     #process epub files with kepubify to generate the kepub version with know improvements
     #not yet implemented
-    #kepubify = "true"
+    #kepubify = true
+
+[application_config]
+    # create a NickelMenu entry to manually trigger KoboMail execution
+    # for this to have effect, make sure to install NickelMenu (https://pgaskin.net/NickelMenu/)
+    create_nickelmenu_entry = true
+
+    # specify the location where KoboMail will download email attachments
+    library_path = "/mnt/onboard/KoboMailLibrary"
+
+    # run KoboMail when WiFi connects
+    run_on_wifi_connect = true
+
+    # set this to false if you wish to disable notifications (even if NickelDbus is installed)
+    show_notifications = true
 ```
 
 If the configuration is not correct KoboMail might not be able to work correctly.
@@ -113,12 +128,6 @@ Currently KoboMail will allow accessing any imap email server, altough tests hav
 The search criteria can be defined in the configuration file and there's two methods:
 - plus: where KoboMail will find emails sent to user+tag@server.com
 - subject: where KoboMail will search emails sent to user@server.com with the [MyKobo] tab in the subject
-
-There's also two different methods to start KoboMail:
-- manual: if you have NickelMenu installed there will be a new option to start KoboMail manually
-- auto: via a automatic mechanism (Udev rules) which will trigger KoboMail everytime Wifi is activated
-
-The prefered method is "manual" as probably you don't want to start KoboMail everytime you sync data.
 
 Everytime KoboMail connects and finds new ebooks to be added the import screen will be shown and the new ebooks will be available in My Books section.
 You might want to review the filetypes allowed by default, currently only kepub and epub.

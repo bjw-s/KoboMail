@@ -3,6 +3,7 @@ dist/
 
 # Potential debugging artifacts
 kobomail.log
+/kobomail
 
 # OS generated files
 .DS_Store

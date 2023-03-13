@@ -1,43 +1,28 @@
 // Package nickeldbus implements all NickelDbus interactions of KoboMail
 package nickeldbus
 
-import "os/exec"
-
-func dialog(APItype string, args ...string) (stdout string, err error) {
-	arg1 := "-m"
-	arg2 := APItype
-	callArgs := append([]string{arg1, arg2}, args...)
-	cmd := exec.Command(binQndb, callArgs...)
-	output, err := cmd.Output()
-
-	if err != nil {
-		return "", err
-	}
-	return string(output), nil
-}
-
 // DialogCreate creates a dialog to show a notification to the user
 func DialogCreate(initialMsg string) {
-	if UseNickelDbus {
-		dialog("dlgConfirmCreate")
-		dialog("dlgConfirmSetTitle", "KoboMail")
-		dialog("dlgConfirmSetBody", initialMsg)
-		dialog("dlgConfirmSetModal", "false")
-		dialog("dlgConfirmShowClose", "true")
-		dialog("dlgConfirmShow")
-	}
+	ndbObj, _ := getNdbObject(nil)
+	// ndbObj.Call(ndbInterface+".mwcToast", 0, 3000, "KoboMail", "Updating")
+	// ndbObj.Call(ndbInterface+".mwcToast", 0, 3000, "KoboMail", "Got emails")
+
+	ndbObj.Call(ndbInterface+".dlgConfirmCreate", 0)
+	ndbObj.Call(ndbInterface+".dlgConfirmSetTitle", 0, "KoboMail")
+	ndbObj.Call(ndbInterface+".dlgConfirmSetBody", 0, initialMsg)
+	ndbObj.Call(ndbInterface+".dlgConfirmSetModal", 0, false)
+	ndbObj.Call(ndbInterface+".dlgConfirmShowClose", 0, false)
+	ndbObj.Call(ndbInterface+".dlgConfirmShow", 0)
 }
 
 // DialogUpdate updates a dialog with a new body
 func DialogUpdate(body string) {
-	if UseNickelDbus {
-		dialog("dlgConfirmSetBody", body)
-	}
+	ndbObj, _ := getNdbObject(nil)
+	ndbObj.Call(ndbInterface+".dlgConfirmSetBody", 0, body)
 }
 
 // DialogAddOKButton updates a dialog with a confirmation button
 func DialogAddOKButton() {
-	if UseNickelDbus {
-		dialog("dlgConfirmSetAccept", "OK")
-	}
+	ndbObj, _ := getNdbObject(nil)
+	ndbObj.Call(ndbInterface+".dlgConfirmSetAccept", 0, "OK")
 }

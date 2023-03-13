@@ -1,4 +1,4 @@
-module github.com/clisboa/kobomail
+module github.com/bjw-s/kobomail
 
 go 1.20
 
@@ -6,9 +6,12 @@ require (
 	github.com/emersion/go-imap v1.2.1
 	github.com/emersion/go-message v0.16.0
 	github.com/go-playground/validator/v10 v10.11.2
+	github.com/godbus/dbus/v5 v5.1.0
 	github.com/knadh/koanf/parsers/toml v0.1.0
+	github.com/knadh/koanf/providers/confmap v0.1.0
 	github.com/knadh/koanf/providers/file v0.1.0
 	github.com/knadh/koanf/v2 v2.0.0
+	github.com/spf13/pflag v1.0.5
 	go.uber.org/zap v1.24.0
 )
 

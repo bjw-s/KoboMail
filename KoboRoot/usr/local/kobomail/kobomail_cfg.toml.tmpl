@@ -4,7 +4,7 @@
 [imap_config]
     # you need to activate IMAP for your gmail account
     imap_host = "imap.gmail.com"
-    imap_port = "993"
+    imap_port = 993
 
     # email account
     imap_user = "user@gmail.com"
@@ -30,25 +30,35 @@
     email_flag = "[MyKobo]"
 
     # flag to process all emails sent to kobo device or only the unread emails
-    email_unseen = "true"
-
-    # delete all emails processed by KoboMail
-    # be very careful when enabling this, as it can result in dataloss!
-    email_delete = "false"
-
-[execution_type]
-    # there's two methods to trigger the KoboMail execution:
-    #  - auto:   via a trigger attached to the wifi connection, where whenever your kobo device is connected to a wifi connection KoboMail is run
-    type = "auto"
-    #  - manual: via NickelMenu where your Kobo device receives an adicional menu where you can mannually trigger the KoboMail execution
-    #             for this method to work you should first install NickelMenu, head over to https://pgaskin.net/NickelMenu/ to review this component
-    #type = "manual"
+    email_unseen = true
 
 [processing_config]
+    # delete all emails processed by KoboMail
+    # be very careful when enabling this, as it can result in data loss!
+    email_delete = false
+
     #list the files KoboMail should get from the emails:
     #filetypes = ["epub", "kepub", "mobi", "pdf", "cbz", "cbr", "txt", "rtf"]
     filetypes = ["epub", "kepub"]
 
+    # perform a full rescan of the Kobo Library
+    # defaults to an abbreviated scan
+    full_rescan = false
+
     #process epub files with kepubify to generate the kepub version with know improvements
     #not yet implemented
-    #kepubify = "true"
+    #kepubify = true
+
+[application_config]
+    # create a NickelMenu entry to manually trigger KoboMail execution
+    # for this to have effect, make sure to install NickelMenu (https://pgaskin.net/NickelMenu/)
+    create_nickelmenu_entry = true
+
+    # specify the location where KoboMail will download email attachments
+    library_path = "/mnt/onboard/KoboMailLibrary"
+
+    # run KoboMail when WiFi connects
+    run_on_wifi_connect = true
+
+    # set this to false if you wish to disable notifications (even if NickelDbus is installed)
+    show_notifications = true

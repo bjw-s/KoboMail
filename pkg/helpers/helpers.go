@@ -2,6 +2,7 @@
 package helpers
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -21,4 +22,17 @@ func FolderExists(foldername string) bool {
 		return false
 	}
 	return info.IsDir()
+}
+
+// DeleteFile removes the file if it exists
+func DeleteFile(filename string) (bool, error) {
+	var err error
+	if FileExists(filename) {
+		err = os.Remove(filename)
+		if err != nil {
+			return false, err
+		}
+		return true, nil
+	}
+	return false, fmt.Errorf("file %s does not exist", filename)
 }

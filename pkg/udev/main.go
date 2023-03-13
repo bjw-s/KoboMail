@@ -4,11 +4,10 @@ package udev
 import (
 	"os"
 
-	"github.com/clisboa/kobomail/pkg/helpers"
+	"github.com/bjw-s/kobomail/pkg/helpers"
+	"github.com/bjw-s/kobomail/pkg/logger"
+	"go.uber.org/zap"
 )
-
-// const rulesFilePath = "/etc/udev/rules.d/97-kobomail.rules"
-const rulesFilePath = "/tmp/97-kobomail.rules"
 
 var kobomailRules = udevRules{
 	`KERNEL=="eth*", ACTION=="add", RUN+="/usr/local/kobomail/kobomail_launcher.sh`,
@@ -16,14 +15,26 @@ var kobomailRules = udevRules{
 	`KERNEL=="lo", RUN+="/usr/local/kobomail/kobomail_config_setup.sh"`,
 }
 
+const udevRulesFilePath = "/etc/udev/rules.d/97-kobomail.rules"
+
 // RulesFileFound checks if udev rules file is present
 func RulesFileFound() (installed bool) {
-	return helpers.FileExists(rulesFilePath)
+	rulesPresent := helpers.FileExists(udevRulesFilePath)
+	logger.Debug(
+		"Checking if udev rules file is present",
+		zap.String("file", udevRulesFilePath),
+		zap.Bool("found", rulesPresent),
+	)
+	return rulesPresent
 }
 
 // DeployRulesFile deploys the udev rulesfile at the correct place so KoboMail runs automatically everytime WIfi is activated
 func DeployRulesFile() (ok bool, err error) {
-	err = os.WriteFile(rulesFilePath, []byte(kobomailRules.generateFile()), 0644)
+	logger.Debug(
+		"Writing udev rules file",
+		zap.String("file", udevRulesFilePath),
+	)
+	err = os.WriteFile(udevRulesFilePath, []byte(kobomailRules.generateFile()), 0644)
 	if err != nil {
 		return false, err
 	}
@@ -32,9 +43,12 @@ func DeployRulesFile() (ok bool, err error) {
 
 // DeleteUdevRulesFile deletes the udev rules file if present
 func DeleteUdevRulesFile() (ok bool, err error) {
+	logger.Debug(
+		"Removing udev rules file",
+		zap.String("file", udevRulesFilePath),
+	)
 	if RulesFileFound() {
-		err = os.Remove(rulesFilePath)
-
+		_, err = helpers.DeleteFile(udevRulesFilePath)
 		if err != nil {
 			return false, err
 		}

@@ -13,7 +13,7 @@ import (
 // Connection is a simple implementation of an IMAP connection
 type Connection struct {
 	host   string
-	port   string
+	port   int
 	client *client.Client
 
 	SearchCriteria *imap.SearchCriteria
@@ -21,7 +21,7 @@ type Connection struct {
 
 func (ic *Connection) connect() error {
 	tlsn := ""
-	connStr := fmt.Sprintf("%s:%s", ic.host, ic.port)
+	connStr := fmt.Sprintf("%s:%v", ic.host, ic.port)
 
 	tlsc := &tls.Config{}
 	if tlsn != "" {
@@ -52,7 +52,7 @@ func (ic *Connection) connect() error {
 }
 
 // ConnectToServer instantiates a new connection to an IMAP server
-func ConnectToServer(host string, port string) (*Connection, error) {
+func ConnectToServer(host string, port int) (*Connection, error) {
 	connection := Connection{
 		host: host,
 		port: port,
