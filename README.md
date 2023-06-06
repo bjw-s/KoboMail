@@ -14,6 +14,11 @@ Use this software AT YOUR OWN RISK.
 
 ## Changelog
 
+**0.5.1**
+
+- Update the launcher with the correct command
+- Update CA certificates
+
 **0.5.0**
 
 - remove all processed emails instead of only the first
