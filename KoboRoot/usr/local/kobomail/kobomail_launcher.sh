@@ -17,7 +17,7 @@ if [ -f "$UNINSTALL" ]; then
 else
     echo "Running KoboMail..."
     logger -t "KoboMail" -p daemon.warning "Launcher: KoboMail binary execution started"
-    /usr/local/kobomail/kobomail
+    /usr/local/kobomail/kobomail run
     logger -t "KoboMail" -p daemon.warning "Launcher: KoboMail binary execution finished"
 fi
 logger -t "KoboMail" -p daemon.warning "Launcher: finished"
