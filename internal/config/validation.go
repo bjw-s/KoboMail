@@ -2,30 +2,36 @@
 package config
 
 import (
-	"fmt"
-	"strings"
-
-	"github.com/go-playground/validator/v10"
+	"github.com/bjw-s/kobomail/pkg/helpers"
+	"github.com/gookit/validate"
+	"go.uber.org/zap/zapcore"
+	"golang.org/x/exp/slices"
 )
 
-func errorMessageForValidationError(fe validator.FieldError) string {
-	switch fe.Tag() {
-	case "required":
-		return "This field is required"
-	case "email":
-		return "Invalid email"
-	case "oneof":
-		return fmt.Sprintf("Invalid value. Expected one of %v", strings.Split(fe.Param(), " "))
+// ValidateLogLevel validates that the log level is one of the valid log levels
+func (c Config) ValidateLogLevel(val string) bool {
+	validLogLevels := []string{}
+	for i := zapcore.DebugLevel; i < zapcore.InvalidLevel; i++ {
+		validLogLevels = append(validLogLevels, i.String())
 	}
-	return fe.Error() // default error
+	return slices.Contains(validLogLevels, val)
+}
+
+// ValidateFolder validates that the path is a valid folder
+func (c Config) ValidateFolder(val string) bool {
+	return helpers.FolderExists(val)
 }
 
 // Validate returns if the given configuration is valid and any validation errors
-func Validate(config *KoboMailConfig) (bool, validator.ValidationErrors) {
-	validate := validator.New()
-	validationErrors := validate.Struct(config)
-	if validationErrors != nil {
-		return false, validationErrors.(validator.ValidationErrors)
+func (c *Config) Validate() validate.Errors {
+	v := validate.Struct(c)
+	v.StopOnError = false
+	return v.ValidateE()
+}
+
+func (c Config) Messages() map[string]string {
+	return validate.MS{
+		"ValidateFolder": "{field} must point to a valid folder.",
+		"ApplicationConfig.LogLevel.ValidateLogLevel": "Log Level must be one of: debug, info, warn, error, dpanic, panic, fatal",
 	}
-	return true, nil
 }

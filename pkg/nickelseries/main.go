@@ -3,7 +3,6 @@ package nickelseries
 
 import (
 	"github.com/bjw-s/kobomail/pkg/helpers"
-	"github.com/bjw-s/kobomail/pkg/logger"
 	"go.uber.org/zap"
 )
 
@@ -16,7 +15,8 @@ func IsInstalled() (installed bool) {
 
 // Uninstall delete the NickelSeries binary if present
 func Uninstall() (ok bool, err error) {
-	logger.Debug(
+	logger := zap.S()
+	logger.Debugw(
 		"Removing NickelSeries binary file",
 		zap.String("file", nickelSeriesPath),
 	)

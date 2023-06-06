@@ -10,6 +10,17 @@
       "request": "launch",
       "mode": "auto",
       "program": "${workspaceFolder}/kobomail.go",
+      "args": [
+        "run",
+        "--config",
+        "${workspaceFolder}/kobomail_cfg.toml",
+        "--log-level",
+        "debug",
+        "--library-path",
+        "/tmp/kobomail",
+        "--log-file",
+        "/dev/stdout"
+      ],
       "cwd": "${workspaceFolder}"
     }
   ]

@@ -118,10 +118,13 @@ func (ic *Connection) CollectMessages() ([]*message, error) {
 func (ic *Connection) DeleteMessage(msg *message) error {
 	if msg != nil {
 		seqset := new(imap.SeqSet)
-		seqset.AddNum(msg.imapMessage.Uid)
-		operation := imap.FormatFlagsOp(imap.AddFlags, false)
-		flags := []interface{}{imap.DeletedFlag}
-		err := ic.client.Store(seqset, operation, flags, nil)
+		seqset.AddNum(msg.imapMessage.SeqNum)
+
+		done := make(chan error, 1)
+		go func() {
+			done <- ic.client.Store(seqset, imap.AddFlags, []interface{}{imap.DeletedFlag}, nil)
+		}()
+		err := <-done
 		if err != nil {
 			return err
 		}

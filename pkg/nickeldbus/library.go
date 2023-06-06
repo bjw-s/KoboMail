@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/bjw-s/kobomail/pkg/logger"
 	"github.com/godbus/dbus/v5"
 	"go.uber.org/zap"
 )
 
 // LibraryRescan sends a request to completely the library
 func LibraryRescan(timeoutSeconds int, fullScan bool) error {
+	logger := zap.S()
 	rescanSignal := make(chan *dbus.Signal, 10)
 	ndbConn, _ := getSystemDbusConnection()
 
@@ -31,12 +31,12 @@ func LibraryRescan(timeoutSeconds int, fullScan bool) error {
 		scanType = "pfmRescanBooksFull"
 	}
 
-	logger.Debug("library rescan: Triggering scan")
+	logger.Debugw("library rescan: Triggering scan")
 	ndbObj, _ := getNdbObject(ndbConn)
 	ndbObj.Call(ndbInterface+"."+scanType, 0)
 
 	// Wait for the pfmDoneProcessing signal or timeout
-	logger.Debug("library rescan: waiting for scan to finish...", zap.Int("timeoutSeconds", timeoutSeconds))
+	logger.Debugw("library rescan: waiting for scan to finish...", zap.Int("timeoutSeconds", timeoutSeconds))
 	select {
 	case rs := <-rescanSignal:
 		valid, err := isDoneProcessingSignal(rs)

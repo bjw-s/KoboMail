@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/bjw-s/kobomail/pkg/helpers"
-	"github.com/bjw-s/kobomail/pkg/logger"
 	"go.uber.org/zap"
 )
 
@@ -21,8 +20,9 @@ func IsInstalled() (installed bool) {
 
 // ConfigFileFound determines if a NickelMenu configuration file is present
 func ConfigFileFound() (installed bool) {
+	logger := zap.S()
 	configPresent := helpers.FileExists(nickelMenuConfigPath)
-	logger.Debug(
+	logger.Debugw(
 		"Checking if NickelMenu configuration file is present",
 		zap.String("file", nickelMenuConfigPath),
 		zap.Bool("found", configPresent),
@@ -32,7 +32,8 @@ func ConfigFileFound() (installed bool) {
 
 // DeployConfigFile deploys the NickelMenu config file to the correct place so we can run KoboMail mannually
 func DeployConfigFile() (ok bool, err error) {
-	logger.Debug(
+	logger := zap.S()
+	logger.Debugw(
 		"Writing NickelMenu configuration file",
 		zap.String("file", nickelMenuConfigPath),
 	)
@@ -46,7 +47,8 @@ func DeployConfigFile() (ok bool, err error) {
 
 // DeleteConfigFile delete the NickelMenu config file if present
 func DeleteConfigFile() (ok bool, err error) {
-	logger.Debug(
+	logger := zap.S()
+	logger.Debugw(
 		"Removing NickelMenu configuration file",
 		zap.String("file", nickelMenuConfigPath),
 	)

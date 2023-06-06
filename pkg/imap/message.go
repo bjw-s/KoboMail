@@ -9,7 +9,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bjw-s/kobomail/pkg/logger"
 	"github.com/emersion/go-imap"
 	"github.com/emersion/go-message/mail"
 	"go.uber.org/zap"
@@ -60,6 +59,7 @@ func (msg *message) FetchDetails() error {
 }
 
 func (msg *message) ProcessAttachments(allowedExtensions []string, destinationPath string) (int, error) {
+	logger := zap.S()
 	msgReader, err := msg.getMessageReader()
 	if err != nil {
 		return 0, err
@@ -89,7 +89,7 @@ func (msg *message) ProcessAttachments(allowedExtensions []string, destinationPa
 					attachmentFileName += ".epub"
 				}
 
-				logger.Debug("Downloading attachment", zap.String("filename", attachmentFileName))
+				logger.Debugw("Downloading attachment", zap.String("filename", attachmentFileName))
 
 				attachmentContent, _ := io.ReadAll(p.Body)
 				// Write the whole body at once
@@ -97,7 +97,7 @@ func (msg *message) ProcessAttachments(allowedExtensions []string, destinationPa
 				if err != nil {
 					return 0, err
 				}
-				logger.Info("Succesfully downloaded attachment", zap.String("filename", attachmentFileName))
+				logger.Infow("Succesfully downloaded attachment", zap.String("filename", attachmentFileName))
 				downloadedAttachmentCount++
 			}
 		}

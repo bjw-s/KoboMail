@@ -2,7 +2,6 @@
 package nickeldbus
 
 import (
-	"github.com/bjw-s/kobomail/pkg/logger"
 	"github.com/godbus/dbus/v5"
 	"github.com/godbus/dbus/v5/introspect"
 	"go.uber.org/zap"
@@ -40,6 +39,7 @@ func getNdbObject(conn *dbus.Conn) (dbus.BusObject, error) {
 
 // IsInstalled returns if NickelDbus is installed
 func IsInstalled() bool {
+	logger := zap.S()
 	var err error
 	var ndbObj dbus.BusObject
 
@@ -51,12 +51,13 @@ func IsInstalled() bool {
 	_, err = introspect.Call(ndbObj)
 	installed := err == nil
 
-	logger.Debug("NickelDbus install check", zap.Bool("installed", installed))
+	logger.Debugw("NickelDbus install check", zap.Bool("installed", installed))
 	return installed
 }
 
 // GetVersion returns the current NickelDbus version
 func GetVersion() (string, error) {
+	logger := zap.S()
 	var err error
 	var ndbVersion string
 	var ndbObj dbus.BusObject
@@ -71,6 +72,6 @@ func GetVersion() (string, error) {
 		return "", err
 	}
 
-	logger.Debug("NickelDbus version", zap.String("version", ndbVersion))
+	logger.Debugw("NickelDbus version", zap.String("version", ndbVersion))
 	return ndbVersion, nil
 }
