@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	github.com/emersion/go-imap v1.2.1
-	github.com/emersion/go-message v0.16.0
+	github.com/emersion/go-message v0.17.0
 	github.com/godbus/dbus/v5 v5.1.0
 	github.com/gookit/validate v1.4.6
 	github.com/knadh/koanf/parsers/toml v0.1.0
